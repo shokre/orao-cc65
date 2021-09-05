@@ -1,0 +1,7 @@
+*.prg
+*.dis
+*.map
+*.dbg
+*.o
+*.lib
+*.lst
