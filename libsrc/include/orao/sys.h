@@ -15,7 +15,7 @@ void orao_print_space(void);
 // print hex value
 void orao_print_hex(i8);
 // print space + hex value
-void orao_print_space_hex_a(i8);
+void orao_print_space_hex(i8);
 // print address of a pointer in hex
 void orao_print_addr(const char[]);
 
