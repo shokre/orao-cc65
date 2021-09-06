@@ -12,7 +12,7 @@ VID_SHIFT := $200
 
 START:  
     lda #$55
-    jsr orao_fill_screen
+    ;jsr orao_fill_screen
     ; num of tiles to draw
     ldx #05
     dex

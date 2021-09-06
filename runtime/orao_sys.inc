@@ -12,5 +12,14 @@ ORAO_SYS_PUTS := $E63B
 ; sys print CR+LF
 ORAO_SYS_PRINT_NEWLINE := $E7F6
 
+; set cursor pos x:$E9 y:$E8
+ORAO_SYS_SET_CUR_POS := $E39D
+
+; print space + A register as hex
+ORAO_SYS_PRINT_SPACE_HEX_A := $E800
+
+; print A register as hex
+ORAO_SYS_PRINT_HEX_A := $E803
+
 ; external routines
 ORAO_EXT_DEBUG_TIMER := $A001

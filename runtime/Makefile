@@ -12,7 +12,7 @@ $(TARGET): $(DEPS)
 	ar65 a $@ $^
 
 %.o: %.s
-	ca65 -t c64 $< -o $@
+	ca65 -t none $< -o $@
 
 clean:
 	rm -f *.lib *.o

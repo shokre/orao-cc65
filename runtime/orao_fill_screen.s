@@ -3,11 +3,11 @@
 
 .segment "CODE"
 
-.export orao_fill_screen
+.export _orao_fill_screen
 
 ; fill screen with A
 
-.proc orao_fill_screen
+.proc _orao_fill_screen
     ldx #$00
 _loop2:
     sta ORAO_MEM_VIDEO+$0000,X
