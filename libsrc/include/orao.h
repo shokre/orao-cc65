@@ -13,4 +13,6 @@ void orao_debug_timer(void);
 // fill screen with byte value
 void orao_fill_screen(unsigned char);
 // int as y * 256 + x, x:h, y:l
-void orao_set_cur_pos(unsigned int);
+void orao_set_cursor_pos(unsigned int);
+
+// END OF FILE

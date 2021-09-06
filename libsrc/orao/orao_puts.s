@@ -6,7 +6,6 @@
 
 .export _orao_puts_sys
 .export _orao_puts
-.export _orao_set_cur_pos
 
 ; print string terminated with 0x04
 
@@ -38,10 +37,4 @@ _loop:
     bne _loop
 _end_loop:
     rts
-.endproc
-
-.proc _orao_set_cur_pos: near
-    sta $E9 ; x
-    stx $E8 ; y
-    jmp $e39d
 .endproc

@@ -27,20 +27,15 @@ void main() {
     orao_debug_timer();
     orao_puts(str);
     orao_debug_timer();
-    // asm("lda #5");
-    // asm("sta $E9"); // x
-    // asm("lda #3");
-    // asm("sta $E8"); // y
-    // asm("jsr $e39d");
-    orao_set_cur_pos(12 * 256 + 3);
+    orao_set_cursor_pos(12 * 256 + 3);
     orao_puts("abc");
-    orao_set_cur_pos(0);
+    orao_set_cursor_pos(0);
     for (b=0; b<3;b++) {
-        orao_set_cur_pos(b * 3 * 256);
-    orao_puts("DEF\r\n");
-    orao_puts("GHi");
-    orao_puts("::()");
-    orao_print_newline();
+        orao_set_cursor_pos(b * 3 * 256);
+        orao_puts("DEF\r\n");
+        orao_puts("GHi");
+        orao_puts("::()");
+        orao_print_newline();
     }
 }
 /*
