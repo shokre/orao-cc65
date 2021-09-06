@@ -4,23 +4,7 @@
 
 .segment "CODE"
 
-.export _orao_puts_sys
 .export _orao_puts
-
-; print string terminated with 0x04
-
-; C sends l:A h:X
-; orao expects h:A,l:Y
-
-; system version of puts which expects \x04 as terminating char
-.proc _orao_puts_sys: near
-    tay 
-    txa
-    jmp ORAO_SYS_PUTS
-.endproc
-
-; tmp var somwhere on zeropage
-; ptr1 := $a2
 
 ; null terminated version of puts
 .proc _orao_puts: near
