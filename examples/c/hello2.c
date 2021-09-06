@@ -12,7 +12,7 @@ void main() {
     asm("nop");
     //test_start();
     orao_fill_screen(0);
-    orao_print_debug();
+    orao_debug_init();
     orao_print_newline();
     asm("lda #>%v", str);
     asm("jsr $e800");
