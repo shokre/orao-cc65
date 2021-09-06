@@ -1,7 +1,8 @@
 
-FLAG_CFG = -C ../cfg/orao-asm.cfg
-LIB_FILE = ../runtime/orao.lib
-INCLUDE_FLAGS = -I ../runtime
+include ../shared.mk
+
+FLAG_CFG = -C ../../cfg/orao-asm.cfg
+
 CA65_FLAGS = -t none --debug-info
 DA65_FLAGS = --comments 3 --start-addr '$$0400'
 
@@ -19,7 +20,7 @@ all: $(patsubst %,%.prg.dis,$(TARGETS))
 	ls -l $@
 
 %.prg.dis: %.prg
-	../../dxa-0.1.4/dxa -N -a dump $< > $@
+	$(DXA_BIN) -N -a dump $< > $@
 
 clean:
 	rm -f *.prg *.dis *.map *.dbg *.bin

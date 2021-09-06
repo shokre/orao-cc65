@@ -6,5 +6,6 @@ clean: ma.clean
 	@echo "> $@ done"
 
 ma.%:
-	cd runtime; make $*
-	cd examples; make $*
+	cd libsrc; make $*
+	cd examples/asm; make $*
+	cd examples/c; make $*

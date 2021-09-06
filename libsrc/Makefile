@@ -1,7 +1,7 @@
 
 FLAG_CFG = -C ../cfg/orao-asm.cfg
 TARGET = orao.lib
-SOURCES = $(wildcard *.s)
+SOURCES = $(wildcard **/*.s)
 DEPS = $(patsubst %.s,%.o,$(SOURCES))
 
 all: $(TARGET)
@@ -15,4 +15,4 @@ $(TARGET): $(DEPS)
 	ca65 -t none $< -o $@
 
 clean:
-	rm -f *.lib *.o
+	rm -f *.lib */*.o
