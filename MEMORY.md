@@ -56,12 +56,12 @@
   - FE8bh - DRAW x:$E2 y:$E3 x2:$E4 y2:$E5
   - FF06h - CIR x:$E2 y:$E3 r:$F8
   - FF89h - RESET sekvenca
-  - FFE8h - VECTOR to ???     (00FE)
-  - FFEBh - VECTOR to ???     (0214)
-  - FFEEh - VECTOR to ???     (0216)
-  - FFF1h - VECTOR to PUTC(A) (0218) (p.171)
-  - FFF4h - VECTOR to ???     (021A)
-  - FFFAh - VECTOR to ???     (021C)
+  - FFE8h - VECTOR to ???       (00FE)
+  - FFEBh - VECTOR to ???       (0214)
+  - FFEEh - VECTOR to INKEY->A  (0216)
+  - FFF1h - VECTOR to PUTC(A)   (0218) (p.171)
+  - FFF4h - VECTOR to ???       (021A)
+  - FFFAh - VECTOR to ???       (021C)
 
 ## Keyboard
 
