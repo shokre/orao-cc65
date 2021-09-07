@@ -23,7 +23,7 @@ ORAO_SYS_PUTC := $E762
 ORAO_SYS_PUTS := $E63B
 ; sys print CR+LF
 ORAO_SYS_PRINT_NEWLINE := $E7F6
-; print space
+; print space (preserving A register)
 ORAO_SYS_PRINT_SPACE := $E7DC
 
 ; print space + A register as hex
