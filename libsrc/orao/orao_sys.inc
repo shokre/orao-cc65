@@ -4,8 +4,14 @@ ORAO_MEM_SOUND = $8800
 ; vectors
 ; call putc via vector
 ORAO_SYS_VEC_PUTC := $FFF1
+; call INKEY via vector
+ORAO_SYS_VEC_INKEY := $FFEE
 
+; get char from keyboard and store to A and $FC
 ORAO_SYS_GETC := $E500
+
+; read char from keyboard with echo, and store to A and $FC
+ORAO_SYS_INKEY := $E71C
 
 ; sys putc(A)
 ORAO_SYS_PUTC := $E762

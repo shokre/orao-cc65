@@ -4,6 +4,7 @@
 .segment "CODE"
 
 .export _orao_getc
+.export _orao_inkey
 
 .export _orao_putc
 
@@ -19,6 +20,7 @@
 ; orao system routines
 
 _orao_getc := ORAO_SYS_GETC
+_orao_inkey := ORAO_SYS_INKEY
 
 _orao_putc := ORAO_SYS_PUTC
 

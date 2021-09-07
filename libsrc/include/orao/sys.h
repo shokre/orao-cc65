@@ -11,6 +11,8 @@ void orao_puts_sys(const char[]);
 void orao_puts(const char[]);
 // get char from keyboard
 char orao_getc(void);
+// read char from keyboard with echo
+char orao_inkey(void);
 
 // print cr+lf
 void orao_print_newline(void);
