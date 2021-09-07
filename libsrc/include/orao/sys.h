@@ -12,11 +12,15 @@ void orao_puts(const char[]);
 void orao_print_newline(void);
 // print space
 void orao_print_space(void);
+// print hex value of register A
+void orao_print_hex_a(void);
 // print hex value
 void orao_print_hex(i8);
+// print space + hex value of register A
+void orao_print_space_hex_a(void);
 // print space + hex value
 void orao_print_space_hex(i8);
 // print address of a pointer in hex
-void orao_print_addr(const char[]);
+void orao_print_addr(const void *);
 
 #endif ORAO_SYS_H__
