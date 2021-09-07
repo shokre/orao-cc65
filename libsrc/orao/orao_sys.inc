@@ -1,6 +1,10 @@
 ORAO_MEM_VIDEO = $6000
 ORAO_MEM_SOUND = $8800
 
+; vector memory locations
+ORAO_MEM_VEC_INKEY = $0216
+ORAO_MEM_VEC_PUTC = $0218
+
 ; vectors
 ; call putc via vector
 ORAO_SYS_VEC_PUTC := $FFF1
