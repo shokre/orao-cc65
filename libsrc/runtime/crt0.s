@@ -1,23 +1,28 @@
-       .export         _exit
-       .export         __STARTUP__ : absolute = 1      ; Mark as startup
-       .import         zerobss, _main
-       .import         initlib, donelib
-       .import         __STACKSTART__                  ; Linker generated
+;
+; Startup code for cc65 (orao version)
+;
 
-       .include "zeropage.inc"
+.export _exit
+.export __STARTUP__ : absolute = 1      ; Mark as startup
 
-       ; .segment "STARTUP"
+.import _main
+.import zerobss
+.import initlib, donelib
+.import __STACKSIZE__                   ; Linker generated
 
-       ;lda #<__STACKSTART__
-       ;ldx #>__STACKSTART__
-       lda #$02
-       ldx #$00
-       sta sp
-       stx sp+1
-       jsr zerobss
-       ; jsr initlib
-       jsr _main
+.include "orao_sys.inc"
+.include "zeropage.inc"
+
+.segment "EXEHDR"
+
+    lda #<(ORAO_MEM_VIDEO - __STACKSIZE__)
+    ldx #>(ORAO_MEM_VIDEO - __STACKSIZE__)
+    sta sp
+    stx sp+1            ; Set argument stack ptr
+    jsr zerobss
+    ; jsr initlib
+    jsr _main
 _exit: pha
-       ; jsr donelib
-       pla
-       rts
+    ; jsr donelib
+    pla
+    rts
