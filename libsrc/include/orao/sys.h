@@ -3,10 +3,14 @@
 
 #include <orao/types.h>
 
+// print char
+void orao_putc(char);
 // system version of puts which expects \x04 as terminating char
 void orao_puts_sys(const char[]);
 // null terminated version of puts
 void orao_puts(const char[]);
+// get char from keyboard
+char orao_getc(void);
 
 // print cr+lf
 void orao_print_newline(void);
