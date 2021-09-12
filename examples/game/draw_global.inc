@@ -1,0 +1,4 @@
+
+_TMP_DRAW_LEN = 20
+_TMP_DRAW_HEIGHT = 20
+
