@@ -11,6 +11,9 @@ DA65_FLAGS = --comments 3 --start-addr '$$0400'
 DEPS = $(patsubst %.c,%.o,$(wildcard *.c))
 DEPS += $(patsubst %.s,%.o,$(wildcard *.s))
 
+all: game.prg
+	@echo ">> $^ built"
+
 %.o: %.c
 	cl65 $(CC65_FLAGS) -l $*.lst -c $<
 

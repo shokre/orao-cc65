@@ -9,3 +9,4 @@ ma.%:
 	cd libsrc; make $*
 	cd examples/asm; make $*
 	cd examples/c; make $*
+	cd examples/game; make $*

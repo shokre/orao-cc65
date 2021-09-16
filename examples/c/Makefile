@@ -10,7 +10,10 @@ DA65_FLAGS = --comments 3 --start-addr '$$0400'
 
 TARGETS = $(patsubst %.c,%,$(wildcard *.c))
 
-all: $(patsubst %,%.prg.dis,$(TARGETS))
+all: $(patsubst %,%.prg,$(TARGETS))
+	@echo "DONE"
+
+all-dis: $(patsubst %,%.prg.dis,$(TARGETS))
 	@echo "DONE"
 
 %.o: %.c
