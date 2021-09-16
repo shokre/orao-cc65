@@ -5,7 +5,9 @@
 void orao_debug_init(void);
 
 // start/stop timer
-void orao_debug_timer(void);
-// fill screen with byte value
+// void orao_debug_timer(void);
+
+// more precise version of timer
+#define orao_debug_timer() asm("sta $A001")
 
 #endif ORAO_DEBUG_H__
