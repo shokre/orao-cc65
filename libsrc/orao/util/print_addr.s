@@ -8,7 +8,7 @@
 .proc _orao_print_addr: near
     tay
     txa 
-    jsr ORAO_SYS_PRINT_SPACE_HEX_A
+    jsr ORAO_SYS_PRINT_HEX_A
     tya
     jmp ORAO_SYS_PRINT_HEX_A
 .endproc
