@@ -1,18 +1,14 @@
+#include <orao.h>
 
+// Hello world example
 
+// Example using null terminated strings
 
-void main() {
-    char str[] = "Hello world!\x04";
-    // char c = 4;
-    // char o = 0x30;
-    // char d = o + c;
-    // asm("jsr $fff1");
-    asm("lda #>%v", str);
-    asm("jsr $e800");
-    asm("lda #<%v", str);
-    asm("jsr $e800");
-    asm("lda #>%v", str);
-    asm("ldy #<%v", str);
-    asm("jsr $E63B");
-    asm("jsr $E7F6");
+void main(void) {
+    char str[] = "Hello World!\n\r";
+
+    orao_print_newline();
+    orao_puts(str);
+    orao_puts("Mikro\nRa[unalo\nORAO");
+    orao_print_newline();
 }

@@ -1,23 +1,23 @@
 #include <orao.h>
 
-//void test_start(void);
+// console rutines test
+
+void test_start(void) {
+    asm("nop");
+    orao_puts("<START>");
+    asm("nop");
+}
 
 void main() {
-    char str[] = "Hello world!";
     unsigned char b;
-    //char c = 4;
-    // char o = 0x30;
-    // char d = o + c;
-    // asm("jsr $fff1");
+    char str[] = "Hello world!";
+
     asm("nop");
-    //test_start();
-    orao_fill_screen(0);
+    orao_cls();
+
     orao_debug_init();
-    orao_print_newline();
-    asm("lda #>%v", str);
-    asm("jsr $e800");
-    asm("lda #<%v", str);
-    asm("jsr $e800");
+    test_start();
+
     orao_puts(" Adr:");
     orao_print_addr(str);
     orao_print_newline();
@@ -29,7 +29,6 @@ void main() {
     orao_debug_timer();
     orao_set_cursor_pos(12 * 256 + 3);
     orao_puts("abc");
-    orao_set_cursor_pos(0);
     for (b=0; b<3;b++) {
         orao_set_cursor_pos(b * 3 * 256);
         orao_puts("DEF\r\n");
@@ -38,10 +37,3 @@ void main() {
         orao_print_newline();
     }
 }
-/*
-void test_start(void) {
-    asm("nop");
-    orao_puts("START");
-    asm("nop");
-}
-*/
