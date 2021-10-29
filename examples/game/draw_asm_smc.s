@@ -110,8 +110,7 @@ _skip:
     jsr _draw_map_scanline
     ;; draw next line
     _advance_draw_ptrs_scanline
-    jsr _draw_map_scanline
-    rts
+    jmp _draw_map_scanline
 .endproc
 
 ; draw current scanline
