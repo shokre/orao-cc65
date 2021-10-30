@@ -6,17 +6,18 @@ unsigned char *tmp_map_data;
 unsigned char *video_mem_start;
 
 #define DRAW_WIDTH 20
-#define DRAW_HEIGHT 20-3
+#define DRAW_HEIGHT 20
 
 // C version of map drawing code
+
+#define DRAW_POS(x, y) (unsigned char*)(0x6000 + ((y+4) * 0x100) + x+1)
+#define MAP_POS(x, y) (unsigned char*)(map_data_tiles + (y * 32) + x)
 
 void draw_map_slow(void) {
     char x, y, my;
     // set video pointer to start of scanline
-    //   start from x:1 y:3(*0xff)
-    //   video_mem_start = $6301
 
-    video_mem_start = (unsigned char*)0x6401;
+    video_mem_start = DRAW_POS(0, 0);
     tmp_map_data = (unsigned char*)map_data_tiles;
 
     for (my = 0; my < DRAW_HEIGHT; my++) {
