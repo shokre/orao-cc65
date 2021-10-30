@@ -100,6 +100,10 @@ _loop:
     draw_asm_smc_set_draw_pos(DRAW_POS);
     draw_asm_smc_map();
 
+    orao_debug_timer();
+    draw_sprite_slow(2, 2+3, map_pos);
+    orao_debug_timer();
+
     switch (orao_getc()) {
         case 'W':
             map_pos -= map_data_width;
