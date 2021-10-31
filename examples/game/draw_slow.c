@@ -46,7 +46,7 @@ void draw_map_slow(void) {
 unsigned char sprite_tiles[] = { 43, 44 };
 unsigned char sprite_mask[] = { 45, 46 };
 
-// 4367 cy
+// 4371 cy
 void draw_sprite_slow(unsigned char sx, unsigned char sy, unsigned char *map_pos) {
     register unsigned char x, y, mask;
 
@@ -63,6 +63,26 @@ void draw_sprite_slow(unsigned char sx, unsigned char sy, unsigned char *map_pos
             mask = tmp_map_data[x];
             video_mem_start[x] = (tmp_gfx_tiles[mask] & tmp_gfx_tiles[sprite_mask[x]]) | tmp_gfx_tiles[sprite_tiles[x]];
         }
+        // advance tile scanline
+        tmp_gfx_tiles += 0x100;
+        // move video to new row
+        video_mem_start += 32;
+    }
+}
+
+// 3621 cy
+void fix_map_slow(unsigned char sx, unsigned char sy, unsigned char *map_pos) {
+    register unsigned char x, y, mask;
+
+    // set screen pos
+    video_mem_start = DRAW_POS(sx, sy);
+    // set gfx data
+    tmp_gfx_tiles = (unsigned char*)gfx_data_tiles;
+
+    tmp_map_data = map_pos + (sy*map_data_width + sx);
+
+    for (y = 0; y < 8; y++) {
+        *video_mem_start = tmp_gfx_tiles[*tmp_map_data];
         // advance tile scanline
         tmp_gfx_tiles += 0x100;
         // move video to new row

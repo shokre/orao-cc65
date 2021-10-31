@@ -69,6 +69,8 @@ void bench_draw(void) {
 unsigned char * map_pos;
 
 void main() {
+    unsigned char spr_x = 2;
+    unsigned char spr_y = 5;
 
     orao_cls();
     orao_puts("ORAO cc65 == Game example\r\n");
@@ -95,27 +97,43 @@ void main() {
 
     map_pos = (unsigned char *)map_data_tiles;
 
-_loop:
     draw_asm_smc_set_map_pos(map_pos);
     draw_asm_smc_set_draw_pos(DRAW_POS);
     draw_asm_smc_map();
 
+_loop:
     orao_debug_timer();
-    draw_sprite_slow(2, 2+3, map_pos);
+    draw_sprite_slow(spr_x, spr_y, map_pos);
     orao_debug_timer();
 
     switch (orao_getc()) {
         case 'W':
-            map_pos -= map_data_width;
+            if (spr_y <= 0)
+                break;
+            fix_map_slow(spr_x, spr_y, map_pos);
+            fix_map_slow(spr_x+1, spr_y, map_pos);
+            --spr_y;
+            //map_pos -= map_data_width;
             break;
         case 'S':
-            map_pos += map_data_width;
+            if (spr_y >= 20)
+                break;
+            fix_map_slow(spr_x, spr_y, map_pos);
+            fix_map_slow(spr_x+1, spr_y, map_pos);
+            ++spr_y;
+            //map_pos += map_data_width;
             break;
         case 'A':
-            --map_pos;
+            if (spr_x <= 0)
+                break;
+            fix_map_slow(spr_x+1, spr_y, map_pos);
+            --spr_x;
             break;
         case 'D':
-            ++map_pos;
+            if (spr_x >= 20)
+                break;
+            fix_map_slow(spr_x, spr_y, map_pos);
+            ++spr_x;
             break;
         case 'Q':
             goto _exit;
