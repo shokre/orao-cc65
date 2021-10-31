@@ -103,15 +103,16 @@ void main() {
 
 _loop:
     orao_debug_timer();
-    draw_sprite_slow(spr_x, spr_y, map_pos);
+    draw_sprite_slow(spr_x, spr_y, 0, map_pos);
+    draw_sprite_slow(spr_x, spr_y+1, 2, map_pos);
     orao_debug_timer();
 
     switch (orao_getc()) {
         case 'W':
             if (spr_y <= 0)
                 break;
-            fix_map_slow(spr_x, spr_y, map_pos);
-            fix_map_slow(spr_x+1, spr_y, map_pos);
+            fix_map_slow(spr_x, spr_y+1, map_pos);
+            fix_map_slow(spr_x+1, spr_y+1, map_pos);
             --spr_y;
             //map_pos -= map_data_width;
             break;
@@ -127,12 +128,14 @@ _loop:
             if (spr_x <= 0)
                 break;
             fix_map_slow(spr_x+1, spr_y, map_pos);
+            fix_map_slow(spr_x+1, spr_y+1, map_pos);
             --spr_x;
             break;
         case 'D':
             if (spr_x >= 20)
                 break;
             fix_map_slow(spr_x, spr_y, map_pos);
+            fix_map_slow(spr_x, spr_y+1, map_pos);
             ++spr_x;
             break;
         case 'Q':

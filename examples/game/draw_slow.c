@@ -1,4 +1,3 @@
-
 #include "gfx.h"
 
 unsigned char *tmp_gfx_tiles;
@@ -41,14 +40,11 @@ void draw_map_slow(void) {
     }
 }
 
-// sprite gfx:  43 44
-// sprite mask: 45 46
-unsigned char sprite_tiles[] = { 43, 44 };
-unsigned char sprite_mask[] = { 45, 46 };
-
-// 4371 cy
-void draw_sprite_slow(unsigned char sx, unsigned char sy, unsigned char *map_pos) {
+// 19774 cy for 2x2 byte sprite
+void draw_sprite_slow(unsigned char sx, unsigned char sy, unsigned char ix, unsigned char *map_pos) {
     register unsigned char x, y, mask;
+    unsigned char *tmp_sprite_gfx =  (unsigned char*)sprite_gfx_data + ix;
+    unsigned char *tmp_sprite_mask =  (unsigned char*)sprite_mask_data + ix;
 
     // set screen pos
     video_mem_start = DRAW_POS(sx, sy);
@@ -61,10 +57,12 @@ void draw_sprite_slow(unsigned char sx, unsigned char sy, unsigned char *map_pos
         // draw scanline
         for (x = 0; x < 2; x++) {
             mask = tmp_map_data[x];
-            video_mem_start[x] = (tmp_gfx_tiles[mask] & tmp_gfx_tiles[sprite_mask[x]]) | tmp_gfx_tiles[sprite_tiles[x]];
+            video_mem_start[x] = (tmp_gfx_tiles[mask] & tmp_sprite_mask[x]) | tmp_sprite_gfx[x];
         }
         // advance tile scanline
         tmp_gfx_tiles += 0x100;
+        tmp_sprite_gfx += 0x100;
+        tmp_sprite_mask += 0x100;
         // move video to new row
         video_mem_start += 32;
     }
@@ -72,7 +70,7 @@ void draw_sprite_slow(unsigned char sx, unsigned char sy, unsigned char *map_pos
 
 // 3621 cy
 void fix_map_slow(unsigned char sx, unsigned char sy, unsigned char *map_pos) {
-    register unsigned char x, y, mask;
+    register unsigned char y;
 
     // set screen pos
     video_mem_start = DRAW_POS(sx, sy);
