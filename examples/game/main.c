@@ -2,8 +2,11 @@
 #include "draw_slow.h"
 #include "draw_asm.h"
 #include "draw_asm_smc.h"
+#include "draw_sprite_asm_smc.h"
 #include "mem_utils.h"
 #include "gfx.h"
+
+#define DRAW_SPRITE_ASM
 
 #define ORAO_MEM_VIDEO ((unsigned char*)0x6000)
 #define DRAW_POS (const void *)0x6401
@@ -103,8 +106,17 @@ void main() {
 
 _loop:
     orao_debug_timer();
+#ifdef DRAW_SPRITE_ASM
+    draw_sprite_asm_smc_set_map_pos(map_pos + (spr_y*map_data_width + spr_x));
+    draw_sprite_asm_smc_set_draw_pos((unsigned char*)(0x6000 + ((spr_y+4) * 0x100) + spr_x+1));
+    draw_sprite_asm_smc(0);
+    draw_sprite_asm_smc_map_advance();
+    draw_sprite_asm_smc_set_draw_pos((unsigned char*)(0x6000 + ((spr_y+5) * 0x100) + spr_x+1));
+    draw_sprite_asm_smc(2);
+#else
     draw_sprite_slow(spr_x, spr_y, 0, map_pos);
     draw_sprite_slow(spr_x, spr_y+1, 2, map_pos);
+#endif
     orao_debug_timer();
 
     switch (orao_getc()) {
