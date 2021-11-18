@@ -12,7 +12,7 @@ unsigned char *video_mem_start;
 #define DRAW_POS(x, y) (unsigned char*)(0x6000 + ((y+4) * 0x100) + x+1)
 #define MAP_POS(x, y) (unsigned char*)(map_data_tiles + (y * 32) + x)
 
-// 1072448 cy
+// 1066412 cy
 void draw_map_slow(void) {
     char x, y, my;
     // set video pointer to start of scanline
@@ -20,14 +20,14 @@ void draw_map_slow(void) {
     video_mem_start = DRAW_POS(0, 0);
     tmp_map_data = (unsigned char*)map_data_tiles;
 
-    for (my = 0; my < DRAW_HEIGHT; my++) {
+    for (my = 0; my < DRAW_HEIGHT; ++my) {
         // reset tile pointer
         tmp_gfx_tiles = (unsigned char*)gfx_data_tiles;
 
         // draw map row
-        for (y = 0; y < 8; y++) {
+        for (y = 0; y < 8; ++y) {
             // draw scanline
-            for (x = 0; x < DRAW_WIDTH; x++) {
+            for (x = 0; x < DRAW_WIDTH; ++x) {
                 video_mem_start[x] = tmp_gfx_tiles[tmp_map_data[x]];
             }
             // advance tile scanline
