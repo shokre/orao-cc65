@@ -12,6 +12,7 @@ unsigned char *video_mem_start;
 #define DRAW_POS(x, y) (unsigned char*)(0x6000 + ((y+4) * 0x100) + x+1)
 #define MAP_POS(x, y) (unsigned char*)(map_data_tiles + (y * 32) + x)
 
+// 1072448 cy
 void draw_map_slow(void) {
     char x, y, my;
     // set video pointer to start of scanline
