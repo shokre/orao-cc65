@@ -105,11 +105,13 @@ void main() {
     draw_asm_smc_map();
 
 _loop:
-    orao_debug_timer();
+orao_debug_timerx(1);
 #ifdef DRAW_SPRITE_ASM
     draw_sprite_asm_smc_set_map_pos(map_pos + (spr_y*map_data_width + spr_x));
     draw_sprite_asm_smc_set_draw_pos((unsigned char*)(0x6000 + ((spr_y+4) * 0x100) + spr_x+1));
+orao_debug_timerx(2);
     draw_sprite_asm_smc(0);
+orao_debug_timerx(2);
     draw_sprite_asm_smc_map_advance();
     draw_sprite_asm_smc_set_draw_pos((unsigned char*)(0x6000 + ((spr_y+5) * 0x100) + spr_x+1));
     draw_sprite_asm_smc(2);
@@ -117,7 +119,7 @@ _loop:
     draw_sprite_slow(spr_x, spr_y, 0, map_pos);
     draw_sprite_slow(spr_x, spr_y+1, 2, map_pos);
 #endif
-    orao_debug_timer();
+orao_debug_timerx(1);
 
     switch (orao_getc()) {
         case 'W':
