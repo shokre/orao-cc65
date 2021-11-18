@@ -41,7 +41,7 @@ void draw_map_slow(void) {
     }
 }
 
-// 19774 cy for 2x2 byte sprite
+// 19732 cy for 2x2 byte sprite
 void draw_sprite_slow(unsigned char sx, unsigned char sy, unsigned char ix, unsigned char *map_pos) {
     register unsigned char x, y, mask;
     unsigned char *tmp_sprite_gfx =  (unsigned char*)sprite_gfx_data + ix;
@@ -54,9 +54,9 @@ void draw_sprite_slow(unsigned char sx, unsigned char sy, unsigned char ix, unsi
 
     tmp_map_data = map_pos + (sy*map_data_width + sx);
 
-    for (y = 0; y < 8; y++) {
+    for (y = 0; y < 8; ++y) {
         // draw scanline
-        for (x = 0; x < 2; x++) {
+        for (x = 0; x < 2; ++x) {
             mask = tmp_map_data[x];
             video_mem_start[x] = (tmp_gfx_tiles[mask] & tmp_sprite_mask[x]) | tmp_sprite_gfx[x];
         }
@@ -80,7 +80,7 @@ void fix_map_slow(unsigned char sx, unsigned char sy, unsigned char *map_pos) {
 
     tmp_map_data = map_pos + (sy*map_data_width + sx);
 
-    for (y = 0; y < 8; y++) {
+    for (y = 0; y < 8; ++y) {
         *video_mem_start = tmp_gfx_tiles[*tmp_map_data];
         // advance tile scanline
         tmp_gfx_tiles += 0x100;
