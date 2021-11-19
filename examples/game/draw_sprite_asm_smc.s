@@ -18,7 +18,7 @@
 .zeropage
 ; counters
 draw_width: .res 1
-draw_height: .res 1
+scanline_cnt: .res 1
 
 ; pointers
 draw_pos_lo: .res 1
@@ -61,7 +61,7 @@ _skip:
     SMC_OperateOnHighByte INC, spSpriteGfxData
 .endmacro
 
-; draw sprite on map - 2220 cy (2x2) - 819 cy
+; draw sprite on map - 2202 cy (2x2) - 810 cy (2x1)
 .proc _draw_sprite_asm_smc
     ; sprite tile index - loaded to A
     SMC_StoreLowByte spSpriteMaskData, A
@@ -71,9 +71,9 @@ _skip:
     lda #0
     SMC_StoreLowByte spTilesStartPos, A
 
-    ; set draw dimensions
-    ldx #_TMP_DRAW_HEIGHT
-    stx draw_height
+    ; draw 8 scanlines
+    ldx #8
+    stx scanline_cnt
 
     ; set draw len
     ldx #2
@@ -88,32 +88,7 @@ _skip:
     lda #>_sprite_gfx_data
     SMC_StoreHighByte spSpriteGfxData, A
 
-    jsr _draw_sprite_scanline
-    ;; draw next line
-    _advance_draw_ptrs_scanline
-    jsr _draw_sprite_scanline
-    ;; draw next line
-    _advance_draw_ptrs_scanline
-    jsr _draw_sprite_scanline
-    ;; draw next line
-    _advance_draw_ptrs_scanline
-    jsr _draw_sprite_scanline
-    ;; draw next line
-    _advance_draw_ptrs_scanline
-    jsr _draw_sprite_scanline
-    ;; draw next line
-    _advance_draw_ptrs_scanline
-    jsr _draw_sprite_scanline
-    ;; draw next line
-    _advance_draw_ptrs_scanline
-    jsr _draw_sprite_scanline
-    ;; draw next line
-    _advance_draw_ptrs_scanline
-    jmp _draw_sprite_scanline
-.endproc
-
-; draw current scanline
-.proc _draw_sprite_scanline
+_draw_scanline:
     ldx draw_width
 _draw:
     ; load map byte
@@ -131,11 +106,20 @@ _draw:
 
     dex
     bpl _draw
+
+    ; next scanline
+    dec scanline_cnt ; 5cy
+    beq _finish     ; 2cy
+
+    _advance_draw_ptrs_scanline
+
+    jmp _draw_scanline ; 3cy
+_finish:
     rts
 .endproc
 
-SMC_Export spMapStartPos, _draw_sprite_scanline::spMapStartPos
-SMC_Export spTilesStartPos, _draw_sprite_scanline::spTilesStartPos
-SMC_Export spSpriteMaskData, _draw_sprite_scanline::spSpriteMaskData
-SMC_Export spSpriteGfxData, _draw_sprite_scanline::spSpriteGfxData
-SMC_Export spDrawStartPos, _draw_sprite_scanline::spDrawStartPos
+SMC_Export spMapStartPos, _draw_sprite_asm_smc::spMapStartPos
+SMC_Export spTilesStartPos, _draw_sprite_asm_smc::spTilesStartPos
+SMC_Export spSpriteMaskData, _draw_sprite_asm_smc::spSpriteMaskData
+SMC_Export spSpriteGfxData, _draw_sprite_asm_smc::spSpriteGfxData
+SMC_Export spDrawStartPos, _draw_sprite_asm_smc::spDrawStartPos
