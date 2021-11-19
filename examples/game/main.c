@@ -22,32 +22,32 @@ void invert_tiles(void) {
 void bench_draw(void) {
     invert_tiles();
     // draw slow
-    orao_debug_timer();
+    orao_debug_timerx(1);
     draw_map_slow();
-    orao_debug_timer();
+    orao_debug_timerx(1);
 
     invert_tiles();
     // draw asm - slow indirect addresing version
-    orao_debug_timer();
+    orao_debug_timerx(2);
     draw_asm_set_map_pos(map_data_tiles);
     draw_asm_set_draw_pos(DRAW_POS);
-    orao_debug_timer();
+    orao_debug_timerx(2);
 
     invert_tiles();
-    orao_debug_timer();
+    orao_debug_timerx(3);
     draw_asm_map();
-    orao_debug_timer();
+    orao_debug_timerx(3);
 
     invert_tiles();
     // draw asm - fast smc version
-    orao_debug_timer();
+    orao_debug_timerx(4);
     draw_asm_smc_set_map_pos(map_data_tiles);
     draw_asm_smc_set_draw_pos(DRAW_POS);
-    orao_debug_timer();
+    orao_debug_timerx(4);
 
-    orao_debug_timer();
+    orao_debug_timerx(5);
     draw_asm_smc_map();
-    orao_debug_timer();
+    orao_debug_timerx(5);
 
     draw_asm_smc_set_map_pos(map_data_tiles+34);
     draw_asm_smc_set_draw_pos(DRAW_POS);

@@ -8,6 +8,7 @@ void orao_debug_init(void);
 // void orao_debug_timer(void);
 
 // more precise version of timer
-#define orao_debug_timer() asm("sta $A001")
+#define orao_debug_timerx(x) asm("sta %w", (0xA000 + x))
+#define orao_debug_timer() orao_debug_timerx(1)
 
 #endif ORAO_DEBUG_H__
