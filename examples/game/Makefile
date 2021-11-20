@@ -21,12 +21,15 @@ all: game.prg
 	ca65 $(CA65_FLAGS) $(INCLUDE_FLAGS) $< -o $@
 
 .PRECIOUS: %.prg
-game.prg: $(DEPS)
-	ld65 $(FLAG_CFG) --dbgfile game.dbg -m game.map $^ $(LIB_FILE) -o $@
+%.prg: $(DEPS)
+	ld65 $(FLAG_CFG) --dbgfile $*.dbg -m $*.map -Ln $*.lbl $^ $(LIB_FILE) -o $@
 	ls -l $@
 
-%.prg.dis: %.prg
-	$(DXA_BIN) -N -a dump $< > $@
+%.da65.info:
+	$(MAP2INFO_BIN) $*.map $*.lbl $*.dbg > $@
+
+%.prg.dis: %.prg %.da65.info
+	da65 -i $*.da65.info $*.prg > $@
 
 clean:
-	rm -f *.prg *.dis *.map *.dbg *.bin *.o *.lst
+	rm -f *.prg *.dis *.map *.dbg *.bin *.o *.lst *.da65.info *.lbl
