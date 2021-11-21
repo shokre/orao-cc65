@@ -9,7 +9,7 @@
 #define DRAW_SPRITE_ASM
 
 #define ORAO_MEM_VIDEO ((unsigned char*)0x6000)
-#define DRAW_POS (const void *)0x6401
+#define DRAW_POS (unsigned char*)0x6401
 
 void invert_tiles(void) {
     mem_invert_bank(gfx_data_tiles);
@@ -71,9 +71,41 @@ void bench_draw(void) {
 
 unsigned char * map_pos;
 
+typedef struct {
+    unsigned char y, x;
+} TSpriteInfo;
+
+
+#define MAX_SPRITES 3
+TSpriteInfo sprites[MAX_SPRITES];
+
+#define MAX_ROW_PTRS 20
+
+void init_map_row_ptrs(void) {
+    unsigned char i;
+    unsigned char *ptr = map_pos;
+
+    for (i=0; i < 32; ++i) {
+        map_row_ptr[i] = ptr;
+        ptr += 32;
+    }
+
+    ptr = DRAW_POS;
+    for (i=0; i < 20; ++i) {
+        draw_row_ptr[i] = ptr;
+        ptr += 0x100;
+    }
+}
+
 void main() {
-    unsigned char spr_x = 2;
-    unsigned char spr_y = 5;
+    unsigned char sp_ix;
+
+    sprites[0].x = 2;
+    sprites[0].y = 5;
+
+    sprites[1].x = 8;
+    sprites[1].y = 7;
+
 
     orao_cls();
     orao_puts("ORAO cc65 == Game example\r\n");
@@ -81,6 +113,8 @@ void main() {
     orao_print_addr(gfx_data_tiles);
     orao_puts(" MAP:$");
     orao_print_addr(map_data_tiles);
+    orao_puts(" PTR:$");
+    orao_print_addr(map_row_ptr);
     orao_print_newline();
     // draw grid
     orao_puts("\n ");
@@ -100,57 +134,57 @@ void main() {
 
     map_pos = (unsigned char *)map_data_tiles;
 
+    init_map_row_ptrs();
+
     draw_asm_smc_set_map_pos(map_pos);
     draw_asm_smc_set_draw_pos(DRAW_POS);
     draw_asm_smc_map();
 
 _loop:
 orao_debug_timerx(1);
+    for (sp_ix = 0; sp_ix < 2; ++sp_ix) {
 #ifdef DRAW_SPRITE_ASM
-    draw_sprite_asm_smc_set_map_pos(map_pos + (spr_y*map_data_width + spr_x));
-    draw_sprite_asm_smc_set_draw_pos((unsigned char*)(0x6000 + ((spr_y+4) * 0x100) + spr_x+1));
-orao_debug_timerx(2);
+    draw_sprite_asm_smc_set_sprite_pos((void *)sprites[sp_ix]);
     draw_sprite_asm_smc(0);
-orao_debug_timerx(2);
-    draw_sprite_asm_smc_map_advance();
-    draw_sprite_asm_smc_set_draw_pos((unsigned char*)(0x6000 + ((spr_y+5) * 0x100) + spr_x+1));
+    draw_sprite_asm_smc_row_advance();
     draw_sprite_asm_smc(2);
 #else
-    draw_sprite_slow(spr_x, spr_y, 0, map_pos);
-    draw_sprite_slow(spr_x, spr_y+1, 2, map_pos);
+    draw_sprite_slow(sprites[sp_ix].x, sprites[sp_ix].y, 0, map_pos);
+    draw_sprite_slow(sprites[sp_ix].x, sprites[sp_ix].y+1, 2, map_pos);
 #endif
+    }
 orao_debug_timerx(1);
 
     switch (orao_getc()) {
         case 'W':
-            if (spr_y <= 0)
+            if (sprites[0].y <= 0)
                 break;
-            fix_map_slow(spr_x, spr_y+1, map_pos);
-            fix_map_slow(spr_x+1, spr_y+1, map_pos);
-            --spr_y;
+            fix_map_slow(sprites[0].x, sprites[0].y+1, map_pos);
+            fix_map_slow(sprites[0].x+1, sprites[0].y+1, map_pos);
+            --sprites[0].y;
             //map_pos -= map_data_width;
             break;
         case 'S':
-            if (spr_y >= 20)
+            if (sprites[0].y >= 20)
                 break;
-            fix_map_slow(spr_x, spr_y, map_pos);
-            fix_map_slow(spr_x+1, spr_y, map_pos);
-            ++spr_y;
+            fix_map_slow(sprites[0].x, sprites[0].y, map_pos);
+            fix_map_slow(sprites[0].x+1, sprites[0].y, map_pos);
+            ++sprites[0].y;
             //map_pos += map_data_width;
             break;
         case 'A':
-            if (spr_x <= 0)
+            if (sprites[0].x <= 0)
                 break;
-            fix_map_slow(spr_x+1, spr_y, map_pos);
-            fix_map_slow(spr_x+1, spr_y+1, map_pos);
-            --spr_x;
+            fix_map_slow(sprites[0].x+1, sprites[0].y, map_pos);
+            fix_map_slow(sprites[0].x+1, sprites[0].y+1, map_pos);
+            --sprites[0].x;
             break;
         case 'D':
-            if (spr_x >= 20)
+            if (sprites[0].x >= 20)
                 break;
-            fix_map_slow(spr_x, spr_y, map_pos);
-            fix_map_slow(spr_x, spr_y+1, map_pos);
-            ++spr_x;
+            fix_map_slow(sprites[0].x, sprites[0].y, map_pos);
+            fix_map_slow(sprites[0].x, sprites[0].y+1, map_pos);
+            ++sprites[0].x;
             break;
         case 'Q':
             goto _exit;

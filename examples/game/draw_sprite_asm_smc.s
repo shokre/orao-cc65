@@ -6,9 +6,11 @@
 .import _sprite_mask_data
 
 .export _draw_sprite_asm_smc
-.export _draw_sprite_asm_smc_set_map_pos
-.export _draw_sprite_asm_smc_set_draw_pos
-.export _draw_sprite_asm_smc_map_advance
+.export _draw_sprite_asm_smc_set_sprite_pos
+.export _draw_sprite_asm_smc_row_advance
+.export _debug_sprite_struct
+.export _map_row_ptr
+.export _draw_row_ptr
 
 .include "orao_sys.inc"
 .include "macros.inc"
@@ -23,30 +25,54 @@ scanline_cnt: .res 1
 ; pointers
 draw_pos_lo: .res 1
 
+.segment "DATA"
+_map_row_ptr: .res 64
+_draw_row_ptr: .res 40
+
 .segment "CODE"
 
+.proc _debug_sprite_struct
+    ; A:y X:x
+    asl a
+    tay
+    lda _map_row_ptr+1, y
+    jsr ORAO_SYS_PRINT_HEX_A
+    txa
+    adc _map_row_ptr, y
+    jsr ORAO_SYS_PRINT_HEX_A
+
+    rts
+.endproc
+
 ; set map position of top left corner
-.proc _draw_sprite_asm_smc_set_map_pos
-    ; store A/X to MapStartPos
-    SMC_StoreAddress spMapStartPos
-    rts
-.endproc
+.proc _draw_sprite_asm_smc_set_sprite_pos
+    ; A:y X:x
+    asl a
+    tay
+    lda _map_row_ptr+1, y
+    SMC_StoreHighByte spMapStartPos, A
+    lda _draw_row_ptr+1, y
+    SMC_StoreHighByte spDrawStartPos, A
 
-; set draw position on screen
-.proc _draw_sprite_asm_smc_set_draw_pos
-    ; store low byte for later
+    txa
+    adc _map_row_ptr, y
+    SMC_StoreLowByte spMapStartPos, A
+
+    txa
+    adc _draw_row_ptr, y
+    SMC_StoreLowByte spDrawStartPos, A
     sta draw_pos_lo
-    ; store A/X to DrawStartPos
-    SMC_StoreAddress spDrawStartPos
+
     rts
 .endproc
 
-
-.proc _draw_sprite_asm_smc_map_advance
+.proc _draw_sprite_asm_smc_row_advance
     SMC_AddAddrLo spMapStartPos, _map_data_width
     bcc _skip
     SMC_OperateOnHighByte INC, spMapStartPos
 _skip:
+    SMC_OperateOnHighByte INC, spDrawStartPos
+    SMC_TransferLowByte spDrawStartPos, draw_pos_lo
 
     rts
 .endproc
@@ -61,7 +87,7 @@ _skip:
     SMC_OperateOnHighByte INC, spSpriteGfxData
 .endmacro
 
-; draw sprite on map - 2202 cy (2x2) - 810 cy (2x1)
+; draw sprite on map - 1662(+5) cy (2x2) - 810 cy (2x1)
 .proc _draw_sprite_asm_smc
     ; sprite tile index - loaded to A
     SMC_StoreLowByte spSpriteMaskData, A
