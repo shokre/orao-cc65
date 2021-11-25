@@ -12,6 +12,9 @@
   - 0218h - address of PUTC (E762) (FFF1 vector)
   - 021Ah - address of (FFFF) FFF4 vector
   - 021Ch - address of (FFFF) FFF7 vector
+  - 021Eh - address of IRQ (HW) handler
+  - 0220h - address of NMI handler
+  - 0222h - address of BRK (SW) handler
   - 0280h - start of MONITOR input buffer
 - 0400-5FFFh   USER RAM (23K)
 - 6000-7FFFh   VIDEO RAM (8K)
@@ -56,15 +59,15 @@
   - FE69h - PLOT x:$E2 y:$E3
   - FE8bh - DRAW x:$E2 y:$E3 x2:$E4 y2:$E5
   - FF06h - CIR x:$E2 y:$E3 r:$F8
-  - FF72h - IRQ handler
-  - FF83h - NMI handler
-  - FF89h - RESET handler
-  - FFE8h - VECTOR to ???       (00FE)
-  - FFEBh - VECTOR to ???       (0214)
-  - FFEEh - VECTOR to INKEY->A  (0216)
-  - FFF1h - VECTOR to PUTC(A)   (0218) (p.171)
-  - FFF4h - VECTOR to ???       (021A)
-  - FFFAh - VECTOR to ???       (021C)
+  - FF72h - system IRQ/BRK handler
+  - FF83h - system NMI handler
+  - FF89h - system RESET handler
+  - FFE8h - VECTOR JMP (00FE) ???
+  - FFEBh - VECTOR JMP (0214) ???
+  - FFEEh - VECTOR JMP (0216) INKEY->A
+  - FFF1h - VECTOR JMP (0218) PUTC(A)   (p.171)
+  - FFF4h - VECTOR JMP (021A) ???
+  - FFFAh - VECTOR JMP (021C) ???
   - FFFAh - address of NMI handler (FF83)
   - FFFCh - address of reset handler (FF89)
   - FFFEh - address of IRQ handler (FF72)
