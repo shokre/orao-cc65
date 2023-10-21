@@ -69,6 +69,58 @@ void bench_draw(void) {
     draw_asm_smc_map();
 }
 
+void video_blt(unsigned char *pos, unsigned char *tmp_gfx_tiles, unsigned char nTiles) 
+{
+    char x, y;
+
+    for (y = 0; y < 8; ++y) {
+        // draw scanline
+        for (x = 0; x < nTiles; ++x) {
+            pos[x] = tmp_gfx_tiles[x];
+        }
+        // advance tile scanline
+        tmp_gfx_tiles += 0x100;
+        // move video to new row
+        pos += 32;
+    }
+}
+
+#define DEBUG_TILES_PER_ROW 16
+#define DEBUG_TILES_CNT DEBUG_TILES_PER_ROW
+
+void debug_tiled_data(unsigned char* cpos)
+{
+    unsigned char i;
+
+    orao_puts("\r\n     0123456789ABCDEF\r\n");
+
+    for (i = 0; i < 16; i++) {
+        orao_print_addr(cpos);
+        orao_puts("\r\n");
+        video_blt(SCREEN_POS(5,i+3), cpos, DEBUG_TILES_CNT);
+
+        cpos += DEBUG_TILES_CNT;
+    }
+
+    orao_getc();
+}
+
+void debug_tiles()
+{
+    orao_cls();
+    orao_puts("Tiles =======\r\n");
+
+    debug_tiled_data((unsigned char*)gfx_data_tiles);
+}
+
+void debug_sprites()
+{
+    orao_cls();
+    orao_puts("Sprites =======\r\n");
+
+    debug_tiled_data((unsigned char*)sprite_gfx_data);
+}
+
 unsigned char * map_pos;
 
 typedef struct {
@@ -97,16 +149,17 @@ void init_map_row_ptrs(void) {
     }
 }
 
-void main() {
-    unsigned char sp_ix;
+void draw_map_area() {
+    map_pos = (unsigned char *)map_data_tiles;
 
-    sprites[0].x = 2;
-    sprites[0].y = 5;
+    init_map_row_ptrs();
 
-    sprites[1].x = 8;
-    sprites[1].y = 7;
+    draw_asm_smc_set_map_pos(map_pos);
+    draw_asm_smc_set_draw_pos(DRAW_POS);
+    draw_asm_smc_map();
+}
 
-
+init_map_screen() {
     orao_cls();
     orao_puts("ORAO cc65 == Game example\r\n");
     orao_puts("GFX:$");
@@ -130,19 +183,27 @@ void main() {
     orao_puts("Use <WSAD> keys to move\r\n");
     orao_puts("- <B>enchmark\r\n");
     orao_puts("- <I>nvert tiles\r\n");
+    orao_puts("- <G> debug tiles\r\n");
+    orao_puts("- <H> debug sprites\r\n");
     orao_puts("- <Q>uit");
 
-    map_pos = (unsigned char *)map_data_tiles;
+    draw_map_area();
+}
 
-    init_map_row_ptrs();
+void main() {
+    unsigned char sp_ix;
 
-    draw_asm_smc_set_map_pos(map_pos);
-    draw_asm_smc_set_draw_pos(DRAW_POS);
-    draw_asm_smc_map();
+    sprites[0].x = 2;
+    sprites[0].y = 5;
+
+    sprites[1].x = 8;
+    sprites[1].y = 7;
+
+    init_map_screen();
 
 _loop:
 orao_debug_timerx(1);
-    for (sp_ix = 0; sp_ix < 2; ++sp_ix) {
+    for (sp_ix = 0; sp_ix < 1; ++sp_ix) {
 #ifdef DRAW_SPRITE_ASM
     draw_sprite_asm_smc_set_sprite_pos((void *)sprites[sp_ix]);
     draw_sprite_asm_smc(0);
@@ -188,11 +249,21 @@ orao_debug_timerx(1);
             break;
         case 'Q':
             goto _exit;
+
         case 'B':
             bench_draw();
             break;
         case 'I':
             invert_tiles();    
+            draw_map_area();
+            break;
+        case 'G':
+            debug_tiles();
+            init_map_screen();
+            break;
+        case 'H':
+            debug_sprites();
+            init_map_screen();
             break;
     }
     goto _loop;
